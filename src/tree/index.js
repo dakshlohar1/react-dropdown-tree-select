@@ -21,6 +21,7 @@ class Tree extends Component {
     readOnly: PropTypes.bool,
     clientId: PropTypes.string,
     activeDescendant: PropTypes.string,
+    className: PropTypes.string,
   }
 
   static defaultProps = {
@@ -139,15 +140,23 @@ class Tree extends Component {
 
   render() {
     const { searchModeOn } = this.props
+    const classGenerator = (...componentClassName) => {
+      const filteredClassName = componentClassName.filter(Boolean)
+      return [this.props.className && this.props.className, ...filteredClassName].join(' ')
+    }
 
     return (
-      <ul className={`root ${searchModeOn ? 'searchModeOn' : ''}`} ref={this.setNodeRef} {...this.getAriaAttributes()}>
+      <ul
+        className={classGenerator('root', searchModeOn ? 'searchModeOn' : '')}
+        ref={this.setNodeRef}
+        {...this.getAriaAttributes()}
+      >
         {this.state.scrollableTarget && (
           <InfiniteScroll
             dataLength={this.state.items.length}
             next={this.loadMore}
             hasMore={this.hasMore()}
-            loader={<span className="searchLoader">Loading...</span>}
+            loader={<span className={classGenerator('searchLoader')}>Loading...</span>}
             scrollableTarget={this.state.scrollableTarget}
           >
             {this.state.items}

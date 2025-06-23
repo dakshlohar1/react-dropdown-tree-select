@@ -17,6 +17,7 @@ class Input extends PureComponent {
     readOnly: PropTypes.bool,
     activeDescendant: PropTypes.string,
     inlineSearchInput: PropTypes.bool,
+    className: PropTypes.string,
   }
 
   constructor(props) {
@@ -42,12 +43,17 @@ class Input extends PureComponent {
       inlineSearchInput,
     } = this.props
 
+    const classGenerator = (...componentClassName) => {
+      const filteredClassName = componentClassName.filter(Boolean)
+      return [this.props.className && this.props.className, ...filteredClassName].join(' ')
+    }
+
     return (
       <input
         type="text"
         disabled={disabled}
         ref={inputRef}
-        className="search"
+        className={classGenerator('search')}
         placeholder={
           inlineSearchInput ? texts.inlineSearchPlaceholder || 'Search...' : texts.placeholder || 'Choose...'
         }

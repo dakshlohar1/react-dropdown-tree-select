@@ -307,7 +307,19 @@ class DropdownTreeSelect extends Component {
 
     const activeDescendant = currentFocus ? `${currentFocus}_li` : undefined
 
-    const commonProps = { disabled, readOnly, activeDescendant, texts, mode, clientId: this.clientId }
+    const commonProps = {
+      disabled,
+      readOnly,
+      activeDescendant,
+      texts,
+      mode,
+      clientId: this.clientId,
+      className: this.props.className,
+    }
+    const classGenerator = (...componentClassName) => {
+      const filteredClassName = componentClassName.filter(Boolean)
+      return [this.props.className && this.props.className, ...filteredClassName].join(' ')
+    }
 
     const searchInput = (
       <Input
@@ -325,17 +337,17 @@ class DropdownTreeSelect extends Component {
     return (
       <div
         id={this.clientId}
-        className={[this.props.className && this.props.className, 'react-dropdown-tree-select']
-          .filter(Boolean)
-          .join(' ')}
+        className={classGenerator('react-dropdown-tree-select')}
         ref={node => {
           this.node = node
         }}
       >
         <div
-          className={['dropdown', mode === 'simpleSelect' && 'simple-select', mode === 'radioSelect' && 'radio-select']
-            .filter(Boolean)
-            .join(' ')}
+          className={classGenerator(
+            'dropdown',
+            mode === 'simpleSelect' && 'simple-select',
+            mode === 'radioSelect' && 'radio-select'
+          )}
         >
           <Trigger
             onTrigger={this.onTrigger}
@@ -349,10 +361,10 @@ class DropdownTreeSelect extends Component {
             </Tags>
           </Trigger>
           {showDropdown && (
-            <div className="dropdown-content" {...this.getAriaAttributes()}>
+            <div className={classGenerator('dropdown-content')} {...this.getAriaAttributes()}>
               {inlineSearchInput && searchInput}
               {this.state.allNodesHidden ? (
-                <span className="no-matches">{texts.noMatches || 'No matches found'}</span>
+                <span className={classGenerator('no-matches')}>{texts.noMatches || 'No matches found'}</span>
               ) : (
                 <Tree
                   data={this.state.tree}

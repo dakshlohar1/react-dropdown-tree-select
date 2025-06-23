@@ -15,6 +15,7 @@ class Trigger extends PureComponent {
     clientId: PropTypes.string,
     tags: PropTypes.array,
     tabIndex: PropTypes.number,
+    className: PropTypes.string,
   }
 
   getAriaAttributes = () => {
@@ -65,16 +66,20 @@ class Trigger extends PureComponent {
   render() {
     const { disabled, readOnly, showDropdown } = this.props
 
-    const dropdownTriggerClassname = [
+    const classGenerator = (...componentClassName) => {
+      const filteredClassName = componentClassName.filter(Boolean)
+      return [this.props.className && this.props.className, ...filteredClassName].join(' ')
+    }
+
+    const dropdownTriggerClassname = classGenerator(
       'dropdown-trigger',
       'arrow',
       disabled && 'disabled',
       readOnly && 'readOnly',
       showDropdown && 'top',
       !showDropdown && 'bottom',
-    ]
-      .filter(Boolean)
-      .join(' ')
+      this.props.className
+    )
 
     return (
       <a
